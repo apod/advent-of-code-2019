@@ -5,11 +5,11 @@
 (defn parse-input [s]
   (pmap read-string (str/split-lines s)))
 
-(defn fuel-required [n]
-  (int (- (Math/floor (/ n 3)) 2)))
-
 (defn sum [coll]
   (reduce + coll))
+
+(defn fuel-required [n]
+  (- (quot n 3) 2))
 
 (defn actual-fuel-required [n]
   (sum (take-while #(<= 0 %) (drop 1 (iterate fuel-required n)))))
