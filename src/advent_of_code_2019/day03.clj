@@ -51,6 +51,10 @@
 (defn closest-intersection [cross-points]
   (apply min (map #(distance [0 0] %) cross-points)))
 
+(defn closest-by-steps [cross-points wires]
+  (apply min (map (fn [point]
+                    (apply + (map #(steps-to point %) wires))) cross-points)))
+
 
 (comment
   (let [input (parse-input (slurp (io/resource "day03/input.txt")))
@@ -58,8 +62,7 @@
     ;; First star
     #_(closest-intersection intersections)
     ;; Second star
-    (apply min (map (fn [point]
-                      (apply + (map #(steps-to point %) input))) intersections))
+    (closest-by-steps intersections input)
     )
   )
 
