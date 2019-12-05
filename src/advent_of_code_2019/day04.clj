@@ -8,20 +8,24 @@
         (conj coll r)
         (recur nxt (conj coll r))))))
 
-(defn valid-password? [n]
-  (let [dgs (digits n)
-        by-pair (partition 2 1 dgs)]
-    (and
-     (= (count dgs) 6)
-     (every? #(apply <= %) by-pair)
-     (boolean? (some #(apply = %) by-pair)))))
+(defn not-decreasing? [digits]
+  (every? #(apply <= %) (partition 2 1 digits)))
 
-(defn valid-password-pt2? [n]
-  (let [dgs (digits n)]
-    (and
-     (= (count dgs) 6)
-     (every? #(apply <= %) (partition 2 1 dgs))
-     (boolean? (some #(= (count %) 2) (partition-by identity dgs))))))
+(defn two-adj? [digits]
+  (boolean? (some #(apply = %) (partition 2 1 digits))))
+
+(defn exactly-two-adj? [digits]
+  (boolean? (some #(= (count %) 2) (partition-by identity digits))))
+
+(defn make-password-pred [& preds]
+  (fn [n]
+    ((apply every-pred preds) (digits n))))
+
+(def valid-password?
+  (make-password-pred not-decreasing? two-adj?))
+
+(def valid-password-pt2?
+  (make-password-pred not-decreasing? exactly-two-adj?))
 
 (comment
   (let [input (range 359282 (inc 820401))]
